@@ -1,8 +1,15 @@
+import useMetaflex from "@/hooks/useMetaflex";
 import { useWallet } from "@solana/wallet-adapter-react";
 import Image from "next/image";
+import { useEffect } from "react";
 
-export default function Home() {
+export default function MyAccount() {
   const { publicKey, wallet } = useWallet();
+  const { getAllNFTs } = useMetaflex();
+
+  useEffect(() => {
+    console.log(getAllNFTs());
+  }, [getAllNFTs]);
 
   console.log(publicKey?.toBase58(), wallet);
   return (
