@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useEffect } from "react";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { Keypair, SystemProgram, Transaction } from "@solana/web3.js";
@@ -8,6 +8,11 @@ import { parseWalletError } from "@/helpers/utils";
 import { useSnackbarContext } from "@/context";
 import { CustomSnackbar } from "..";
 import Link from "next/link";
+import { AppBar, Box, Container } from "@mui/material";
+import { COLOR } from "@/helpers/constants";
+import { useRouter } from "next/router";
+import useJsonStore from "@/zustand/store";
+import Routes from "@/routes";
 
 const WalletMultiButtonDynamic = dynamic(
   async () =>
@@ -16,9 +21,22 @@ const WalletMultiButtonDynamic = dynamic(
 );
 
 const Header: FC = () => {
+  const router = useRouter();
+  const { resetMyNfts } = useJsonStore();
   const { setSnackbar } = useSnackbarContext();
   const { connection } = useConnection();
-  const { publicKey, sendTransaction, wallet } = useWallet();
+  const { publicKey, sendTransaction, connected, connecting } = useWallet();
+
+  useEffect(() => {
+    if (!connecting && !publicKey) {
+      if (!connected) {
+        router.push(Routes.Home);
+        resetMyNfts();
+      } else {
+        router.push(Routes.MyAccount);
+      }
+    }
+  }, [connecting]);
 
   const onClick = useCallback(async () => {
     try {
@@ -60,15 +78,21 @@ const Header: FC = () => {
 
   return (
     <>
-      <header>
-        <Link href="/">Home</Link>
-        <WalletMultiButtonDynamic />
-        {/* {wallet && <WalletDisconnectButtonDynamic />} */}
-        <button onClick={onClick} disabled={!publicKey}>
+      <AppBar
+        component="header"
+        sx={{ background: COLOR.PRIMARY, boxShadow: "none" }}
+      >
+        <Container maxWidth="lg" className="flex justify-between ">
+          <Box className="flex gap-3 items-center">
+            <Link href={Routes.Home}>Marketplace</Link>
+            {publicKey && <Link href={Routes.MyAccount}>My Account</Link>}
+          </Box>
+          <WalletMultiButtonDynamic />
+        </Container>
+      </AppBar>
+      {/* <button onClick={onClick} disabled={!publicKey}>
           {`Send SOL to a random address!`}
-        </button>
-        {publicKey && <Link href="/my-account">My Account</Link>}
-      </header>
+        </button> */}
       <CustomSnackbar />
     </>
   );

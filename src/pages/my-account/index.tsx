@@ -1,29 +1,43 @@
-import useMetaflex from "@/hooks/useMetaflex";
+import { CustomModal, CustomNftCard, PageHeader } from "@/components";
+import { useMetaflex, useOpenElement } from "@/hooks";
+import { Button, Grid, Box } from "@mui/material";
 import { useWallet } from "@solana/wallet-adapter-react";
-import Image from "next/image";
-import { useEffect } from "react";
 
 export default function MyAccount() {
-  const { publicKey, wallet } = useWallet();
-  const { getAllNFTs } = useMetaflex();
+  const { publicKey, connected } = useWallet();
+  const { myNfts } = useMetaflex();
+  const { open, onOpen, onClose } = useOpenElement();
 
-  useEffect(() => {
-    console.log(getAllNFTs());
-  }, [getAllNFTs]);
-
-  console.log(publicKey?.toBase58(), wallet);
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-    </main>
+    <>
+      <PageHeader
+        title="My Account"
+        description="All about my account"
+        action={<Button onClick={onOpen}>Mint NFT</Button>}
+      />
+      <Grid container spacing={3} className="min-h-screen">
+        {publicKey && connected && myNfts.info?.length > 0
+          ? myNfts?.info?.map((nft, index) => (
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                lg={3}
+                key={`${index}-${nft.image}` as any}
+              >
+                <CustomNftCard
+                  name={`${nft.name}`}
+                  image={`${nft.image}`}
+                  description={`${nft.description}`}
+                />
+              </Grid>
+            ))
+          : null}
+      </Grid>
+      <CustomModal open={open} onClose={onClose}>
+        <Box component="form">Hello Modal</Box>
+      </CustomModal>
+    </>
   );
 }
