@@ -1,21 +1,63 @@
+import { useEffect, useCallback } from "react";
 import { useConnection } from ".";
-import { Metaplex, keypairIdentity } from "@metaplex-foundation/js";
+import {
+  Metaplex,
+  keypairIdentity,
+  bundlrStorage,
+} from "@metaplex-foundation/js";
 import { Keypair } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
+import axios from "axios";
+import useJsonStore from "@/zustand/store";
+
+interface Attribute {
+  trait_type: String;
+  value: String;
+}
+export interface NFT {
+  name: String;
+  description: String;
+  image: String;
+  attributes: Attribute[];
+}
 
 function useMetaflex() {
-  const { connection } = useConnection();
+  const { connection, endpoint } = useConnection();
+  const { myNfts, getMyNfts } = useJsonStore();
   const { publicKey } = useWallet();
 
-  const getAllNFTs = async () => {
-    const keypair = Keypair.generate();
+  const keypair = Keypair.generate();
+  const metaplex = new Metaplex(connection).use(keypairIdentity(keypair)).use(
+    bundlrStorage({
+      address: "https://devnet.bundlr.network",
+      providerUrl: endpoint,
+      timeout: 60000,
+    })
+  );
 
-    const metaplex = new Metaplex(connection);
-    metaplex.use(keypairIdentity(keypair));
-    return await metaplex.nfts().findAllByOwner(publicKey);
-  };
+  const getAllNFTs = useCallback(async () => {
+    if (!publicKey) return;
 
-  return { getAllNFTs };
+    let nftArray: NFT[] = [];
+
+    let raw = await metaplex.nfts().findAllByOwner({ owner: publicKey });
+    console.log(raw);
+    raw = raw.map((i: any) => i?.uri);
+
+    for (const uri of raw) {
+      const res = await fetch(uri);
+      const data = await res.json();
+      nftArray.push(data);
+    }
+
+    getMyNfts(nftArray);
+  }, [publicKey, metaplex, getMyNfts]);
+
+  useEffect(() => {
+    if (myNfts.info?.length <= 0) getAllNFTs();
+  }, [myNfts.info?.length, getAllNFTs]);
+
+  return { myNfts };
 }
 
 export default useMetaflex;
