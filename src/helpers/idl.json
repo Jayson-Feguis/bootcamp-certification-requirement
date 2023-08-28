@@ -1,0 +1,136 @@
+{
+  "version": "0.1.0",
+  "name": "certification_requirement_be",
+  "constants": [
+    {
+      "name": "USER_TAG",
+      "type": "bytes",
+      "value": "[85, 83, 69, 82, 95, 80, 82, 79, 70, 73, 76, 69]"
+    },
+    {
+      "name": "LEADERBOARD_TAG",
+      "type": "bytes",
+      "value": "[76, 69, 65, 68, 69, 82, 66, 79, 65, 82, 68, 95, 65, 67, 67, 79, 85, 78, 84]"
+    }
+  ],
+  "instructions": [
+    {
+      "name": "initializeUser",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "userProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "addLeaderboard",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "userProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "leaderboardAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "game",
+          "type": "string"
+        },
+        {
+          "name": "mode",
+          "type": "string"
+        },
+        {
+          "name": "point",
+          "type": "u32"
+        },
+        {
+          "name": "time",
+          "type": "u32"
+        },
+        {
+          "name": "guess",
+          "type": "u32"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "UserProfile",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user",
+            "type": "publicKey"
+          },
+          {
+            "name": "gamesPlayed",
+            "type": "u32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LeaderboardAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user",
+            "type": "publicKey"
+          },
+          {
+            "name": "game",
+            "type": "string"
+          },
+          {
+            "name": "mode",
+            "type": "string"
+          },
+          {
+            "name": "point",
+            "type": "u32"
+          },
+          {
+            "name": "time",
+            "type": "u32"
+          },
+          {
+            "name": "guess",
+            "type": "u32"
+          }
+        ]
+      }
+    }
+  ]
+}
