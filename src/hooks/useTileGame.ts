@@ -163,7 +163,7 @@ function useTileGame() {
           if (tiles[clickedTiles[0] as any] === tiles[idx as any]) {
             // correct guess
             const pointToBeAdded =
-              (Math.sqrt(Number(_.size(tiles))) / 2) *
+              Math.sqrt(Number(_.size(tiles))) *
               Math.floor(
                 pointPerGuess -
                   Number((getElapsedRunningTime() / 10000).toFixed(2))
