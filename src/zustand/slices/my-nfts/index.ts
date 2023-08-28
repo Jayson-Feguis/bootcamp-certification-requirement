@@ -29,7 +29,7 @@ const myNftsSlice: StateCreator<IMyNftsSlice> = (set) => ({
   getMyNfts: (nfts) => {
     set((state) => ({
       ...state,
-      myNfts: objState([false, true, nfts, null, null]),
+      myNfts: objState([false, true, nfts, null, Date.now()]),
     }));
   },
   resetMyNfts: () => {

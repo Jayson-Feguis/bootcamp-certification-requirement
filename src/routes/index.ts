@@ -1,6 +1,7 @@
 const Routes = {
-  Home: "/",
-  MyAccount: "/my-account",
+  Game: "/",
+  Leaderboard: "/leaderboard",
+  MyNFTs: "/my-nfts",
 };
 
 export default Routes;

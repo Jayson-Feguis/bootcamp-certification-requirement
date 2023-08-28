@@ -3,22 +3,15 @@ import React, { FC, useCallback, useEffect } from "react";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { Keypair, SystemProgram, Transaction } from "@solana/web3.js";
-import dynamic from "next/dynamic";
 import { parseWalletError } from "@/helpers/utils";
 import { useSnackbarContext } from "@/context";
-import { CustomSnackbar } from "..";
+import { CustomSelectWalletButton, CustomSnackbar } from "..";
 import Link from "next/link";
 import { AppBar, Box, Container } from "@mui/material";
-import { COLOR } from "@/helpers/constants";
+import { COLOR, FONT } from "@/helpers/constants";
 import { useRouter } from "next/router";
 import useJsonStore from "@/zustand/store";
 import Routes from "@/routes";
-
-const WalletMultiButtonDynamic = dynamic(
-  async () =>
-    (await import("@solana/wallet-adapter-react-ui")).WalletMultiButton,
-  { ssr: false }
-);
 
 const Header: FC = () => {
   const router = useRouter();
@@ -30,10 +23,10 @@ const Header: FC = () => {
   useEffect(() => {
     if (!connecting && !publicKey) {
       if (!connected) {
-        router.push(Routes.Home);
+        router.push(Routes.Game);
         resetMyNfts();
       } else {
-        router.push(Routes.MyAccount);
+        router.push(Routes.MyNFTs);
       }
     }
   }, [connecting]);
@@ -83,11 +76,12 @@ const Header: FC = () => {
         sx={{ background: COLOR.PRIMARY, boxShadow: "none" }}
       >
         <Container maxWidth="lg" className="flex justify-between ">
-          <Box className="flex gap-3 items-center">
-            <Link href={Routes.Home}>Marketplace</Link>
-            {publicKey && <Link href={Routes.MyAccount}>My Account</Link>}
+          <Box className={`flex gap-5 items-center`}>
+            <Link href={Routes.Game}>Play Games</Link>
+            <Link href={Routes.Leaderboard}>Leaderboard</Link>
+            {publicKey && <Link href={Routes.MyNFTs}>My NFTs</Link>}
           </Box>
-          <WalletMultiButtonDynamic />
+          <CustomSelectWalletButton />
         </Container>
       </AppBar>
       {/* <button onClick={onClick} disabled={!publicKey}>

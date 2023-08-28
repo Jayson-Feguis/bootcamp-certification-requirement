@@ -1,3 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Barriecito&family=Poppins&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'PlaymegamesReguler-2OOee';
+  src: local('PlaymegamesReguler-2OOee'),
+    url('../assets/fonts/PlaymegamesReguler-2OOee.ttf') format('truetype');
+  font-weight: normal;
+}
+
+*{
+  font-family: 'Poppins';
+}
+
+.wallet-adapter-dropdown {
+  font-family: 'Poppins !important';
+}
+.wallet-adapter-dropdown-list {
+  font-family: 'Poppins !important';
+}
