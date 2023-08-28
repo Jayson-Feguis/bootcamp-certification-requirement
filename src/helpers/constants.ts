@@ -14,4 +14,19 @@ export const COLOR = {
   TERTIARY: "#2C2D30",
 
   WHITE: "#FFFFFF",
+  BLACK: "#000000",
+  YELLOW: "#FFC107",
+};
+
+export const FONT = {
+  PRIMARY: "Poppins",
+
+  PLAYMEGAMES: "PlaymegamesReguler-2OOee",
+  BARRIECITO: "Barriecito",
+};
+
+export const GAME = {
+  TILE: {
+    MODES: ["4x4", "6x6", "8x8"],
+  },
 };

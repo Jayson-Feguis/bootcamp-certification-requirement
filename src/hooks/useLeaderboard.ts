@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   useAnchorWallet,
   useConnection,
@@ -11,17 +11,19 @@ import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pub
 import { utf8 } from "@project-serum/anchor/dist/cjs/utils/bytes";
 import { SystemProgram } from "@solana/web3.js";
 import { useSnackbarContext } from "@/context";
-import { authorFilter, parseWalletError } from "@/helpers/utils";
+import { authorFilter, dateOffset, parseWalletError } from "@/helpers/utils";
 import _ from "lodash";
+import useJsonStore from "@/zustand/store";
 
 function useLeaderboard() {
   const { connection } = useConnection();
   const { publicKey } = useWallet();
   const anchorWallet = useAnchorWallet();
   const { setSnackbar } = useSnackbarContext();
+  const { leaderboard, getLeaderboard } = useJsonStore();
 
-  const [leaderboard, setLeaderboard] = useState([]);
   const [initialized, setInitialized] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const program = useMemo(() => {
     if (anchorWallet) {
@@ -38,9 +40,16 @@ function useLeaderboard() {
     }
   }, [connection, anchorWallet]);
 
+  useEffect(() => {
+    if (!leaderboard.updatedAt) fetchLeaderboard();
+    if (new Date() > dateOffset(10000, leaderboard.updatedAt as any))
+      fetchLeaderboard();
+  }, []);
+
   const initializeUser = async () => {
     if (program && publicKey) {
       try {
+        setIsLoading(true);
         const [userProfilePda] = findProgramAddressSync(
           [utf8.encode("USER_PROFILE"), publicKey.toBuffer()],
           program.programId
@@ -67,6 +76,8 @@ function useLeaderboard() {
           isShow: true,
           type: "success",
         }));
+        setIsLoading(false);
+        return true;
       } catch (error: any) {
         setSnackbar((prev) => ({
           ...prev,
@@ -74,33 +85,33 @@ function useLeaderboard() {
           isShow: true,
           type: "error",
         }));
-        console.log(error);
+        setIsLoading(false);
         setInitialized(false);
+        return false;
       }
     }
   };
 
-  const getLeaderboard = async () => {
+  const fetchLeaderboard = async () => {
     if (program && publicKey) {
       try {
-        const leaderboardAccount: any =
-          await program.account.leaderboardAccount.all([
-            authorFilter(publicKey.toString()),
-          ]); // all([authorFilter(publicKey.toString())])
+        setIsLoading(true);
+        let leaderboardAccount: any =
+          await program.account.leaderboardAccount.all(); // all([authorFilter(publicKey.toString())])
 
-        console.log(
-          leaderboardAccount.map((i: any) => ({
-            ...i,
-            publicKey: i.publicKey.toString(),
-            account: { ...i.account, user: i.account.user.toString() },
-          }))
-        );
+        leaderboardAccount = leaderboardAccount
+          .map((i: any) => ({ ...i.account, user: i.account.user.toString() }))
+          .sort((a: any, b: any) => b.point - a.point)
+          .map((i: any, idx: number) => ({ ...i, rank: idx + 1 }));
+
+        getLeaderboard(leaderboardAccount);
         setSnackbar((prev) => ({
           ...prev,
           content: "Successfully fetched leaderboard",
           isShow: true,
           type: "success",
         }));
+        setIsLoading(false);
       } catch (error: any) {
         setSnackbar((prev) => ({
           ...prev,
@@ -108,7 +119,7 @@ function useLeaderboard() {
           isShow: true,
           type: "error",
         }));
-        console.log(error);
+        setIsLoading(false);
       }
     }
   };
@@ -122,6 +133,7 @@ function useLeaderboard() {
   ) => {
     if (program && publicKey) {
       try {
+        setIsLoading(true);
         const [userProfilePda] = findProgramAddressSync(
           [utf8.encode("USER_PROFILE"), publicKey.toBuffer()],
           program.programId
@@ -152,10 +164,12 @@ function useLeaderboard() {
 
         setSnackbar((prev) => ({
           ...prev,
-          content: "Successfully added to leaderboard",
+          content: "Game saved!",
           isShow: true,
           type: "success",
         }));
+        setIsLoading(false);
+        return true;
       } catch (error: any) {
         setSnackbar((prev) => ({
           ...prev,
@@ -163,16 +177,17 @@ function useLeaderboard() {
           isShow: true,
           type: "error",
         }));
-        console.log(error);
+        setIsLoading(false);
+        return false;
       }
     }
   };
 
   return {
-    leaderboard,
+    isLoading,
     initialized,
     initializeUser,
-    getLeaderboard,
+    fetchLeaderboard,
     addLeaderboard,
   };
 }

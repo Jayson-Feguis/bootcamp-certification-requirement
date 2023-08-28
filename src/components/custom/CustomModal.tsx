@@ -4,7 +4,7 @@ import { COLOR } from "@/helpers/constants";
 
 interface Props {
   open: boolean;
-  onClose: () => void;
+  onClose?: () => void;
   children: ReactElement;
 }
 
@@ -36,9 +36,11 @@ const CustomModal: FC<Props> = ({ children, open, onClose }) => {
               md: "auto",
             },
             minWidth: { xs: "90%", md: 400 },
-            bgcolor: COLOR.TERTIARY,
+            bgcolor: COLOR.SECONDARY,
             boxShadow: 24,
             p: 4,
+            borderRadius: "12px",
+            border: `1px solid ${COLOR.TERTIARY}`,
           }}
         >
           {children}

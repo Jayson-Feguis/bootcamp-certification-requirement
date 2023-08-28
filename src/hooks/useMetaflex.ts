@@ -9,6 +9,7 @@ import { Keypair } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import axios from "axios";
 import useJsonStore from "@/zustand/store";
+import { dateOffset } from "@/helpers/utils";
 
 interface Attribute {
   trait_type: String;
@@ -54,8 +55,9 @@ function useMetaflex() {
   }, [publicKey, metaplex, getMyNfts]);
 
   useEffect(() => {
-    if (myNfts.info?.length <= 0) getAllNFTs();
-  }, [myNfts.info?.length, getAllNFTs]);
+    if (!myNfts.updatedAt) getAllNFTs();
+    if (new Date() > dateOffset(10000, myNfts.updatedAt as any)) getAllNFTs();
+  }, [myNfts.updatedAt, getAllNFTs]);
 
   return { myNfts };
 }

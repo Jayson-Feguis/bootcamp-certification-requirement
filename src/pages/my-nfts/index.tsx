@@ -3,7 +3,7 @@ import { useMetaflex, useOpenElement } from "@/hooks";
 import { Button, Grid, Box } from "@mui/material";
 import { useWallet } from "@solana/wallet-adapter-react";
 
-export default function MyAccount() {
+export default function MyNFTs() {
   const { publicKey, connected } = useWallet();
   const { myNfts } = useMetaflex();
   const { open, onOpen, onClose } = useOpenElement();
@@ -11,8 +11,8 @@ export default function MyAccount() {
   return (
     <>
       <PageHeader
-        title="My Account"
-        description="All about my account"
+        title="My NFTs"
+        description="All about my NFTs"
         action={<Button onClick={onOpen}>Mint NFT</Button>}
       />
       <Grid container spacing={3} className="min-h-screen">

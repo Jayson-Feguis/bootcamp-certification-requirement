@@ -1,6 +1,7 @@
 import { create, State, StateCreator, StoreMutatorIdentifier } from "zustand";
 import { persist } from "zustand/middleware";
 import myNftsSlice, { IMyNftsSlice } from "../slices/my-nfts";
+import leaderboardSlice, { ILeaderboardSlice } from "../slices/leaderboard";
 
 type Logger = <
   T extends State,
@@ -31,11 +32,12 @@ export const logger = loggerImpl as unknown as Logger;
 
 const useJsonStore = create(
   logger(
-    persist<IMyNftsSlice>(
+    persist<IMyNftsSlice & ILeaderboardSlice>(
       (...args) => ({
         ...myNftsSlice(...args),
+        ...leaderboardSlice(...args),
       }),
-      { name: "json-marketplace" }
+      { name: "json-dapp" }
     )
   )
 );

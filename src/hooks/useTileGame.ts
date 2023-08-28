@@ -2,8 +2,7 @@ import React, { useCallback, useState, useEffect, useRef } from "react";
 import _ from "lodash";
 import { useTimer } from "react-use-precision-timer";
 
-const tileA = ["👣", "👀", "👓", "🧥", "🎓", "👑", "☂️", "💍"]; // 4x4
-const tileB = [
+const tileArray = [
   "👣",
   "👀",
   "👓",
@@ -22,7 +21,42 @@ const tileB = [
   "👻",
   "🙀",
   "💀",
-]; // 6x6
+  "🤡",
+  "🦴",
+  "👒",
+  "✌🏻",
+  "🤟🏻",
+  "😶‍🌫️",
+  "🥸",
+  "😇",
+  "👺",
+  "😷",
+  "🌕",
+  "⭐️",
+  "❄️",
+  "🍋",
+  "🍥",
+  "🏐",
+  "🏀",
+  "🔑",
+  "💊",
+  "🤍",
+  "💡",
+  "💿",
+  "🎺",
+  "🥛",
+  "🍼",
+  "🐼",
+  "🐧",
+  "🐔",
+  "🐇",
+  "🌸",
+  "🎄",
+  "🐥",
+  "🐶",
+  "🐰",
+  "🦁",
+];
 
 export interface ICount {
   game: String;
@@ -30,6 +64,7 @@ export interface ICount {
   guess: number;
   point: number;
   time: number;
+  [key: string]: String | number; // Index signature
 }
 
 function useTileGame() {
@@ -39,6 +74,7 @@ function useTileGame() {
   const [tiles, setTiles] = useState<String[]>([]);
   const [isStarted, setIsStarted] = useState<Boolean>(false);
   const [isWinner, setIsWinner] = useState<Boolean>(false);
+  const [isSaved, setIsSaved] = useState<Boolean>(false);
   const [winnerTime, setWinnerTime] = useState<Number>(0);
 
   const pointPerGuess = 10;
@@ -59,6 +95,7 @@ function useTileGame() {
     getElapsedRunningTime,
     start: startTimer,
     pause: pauseTimer,
+    stop: stopTimer,
   } = useTimer({
     delay: 1000,
     runOnce: false,
@@ -90,28 +127,27 @@ function useTileGame() {
     setIsStarted(true);
     setMode(modeByUser);
 
-    switch (modeByUser) {
-      case "4x4":
-        setTiles(_.shuffle([...tileA, ...tileA]));
-        setCount((prev) => ({ ...prev, mode: modeByUser }));
-        break;
-      case "6x6":
-        setTiles(_.shuffle([...tileB, ...tileB]));
-        setCount((prev) => ({ ...prev, mode: modeByUser }));
-        break;
-      default:
-        setTiles(_.shuffle([...tileA, ...tileA]));
-        setCount((prev) => ({ ...prev, mode: "4x4" }));
-        break;
-    }
+    const modeNumber = Number(modeByUser.split("x")[0]);
+    const modeTiles =
+      (modeNumber * modeNumber) / 2 <= _.size(tileArray)
+        ? _.shuffle(_.uniq(tileArray)).slice(0, (modeNumber * modeNumber) / 2)
+        : [];
+
+    console.log(_.size(modeTiles));
+
+    setTiles(_.shuffle([...modeTiles, ...modeTiles]));
+    setCount((prev) => ({ ...prev, mode: modeByUser }));
   }, []);
 
   const reset = useCallback(() => {
     setIsWinner(false);
+    setIsStarted(false);
     setWinnerTime(0);
     setClickedCorrectTiles([]);
     setClickedTiles([]);
     setCount({ game: "tile", mode: "", guess: 0, point: 0, time: 0 });
+    stopTimer();
+    setTiles([]);
   }, []);
 
   const quit = useCallback(() => {}, []);
@@ -182,6 +218,7 @@ function useTileGame() {
     isStarted,
     count,
     getElapsedRunningTime,
+    reset,
   };
 }
 
