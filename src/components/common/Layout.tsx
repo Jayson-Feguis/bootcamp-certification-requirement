@@ -1,6 +1,9 @@
 import React, { FC, ReactNode } from "react";
 import { Wallet, Header } from "..";
 import ContextProvider from "@/context";
+import { Box, Container } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
+import customTheme from "@/theme";
 
 interface Props {
   children: ReactNode;
@@ -9,10 +12,16 @@ interface Props {
 const Layout: FC<Props> = ({ children }) => {
   return (
     <ContextProvider>
-      <Wallet>
-        <Header />
-        {children}
-      </Wallet>
+      <ThemeProvider theme={customTheme}>
+        <Wallet>
+          <Header />
+          <Box className={`!bg-[#11141E] min-h-screen`}>
+            <Container maxWidth="lg" className="pt-[60px] relative">
+              {children}
+            </Container>
+          </Box>
+        </Wallet>
+      </ThemeProvider>
     </ContextProvider>
   );
 };
