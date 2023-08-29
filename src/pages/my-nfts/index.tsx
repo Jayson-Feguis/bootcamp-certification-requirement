@@ -31,7 +31,7 @@ export default function MyNFTs() {
   const { open, onOpen, onClose } = useOpenElement();
   const { setSnackbar } = useSnackbarContext();
 
-  const [metadata, setMetadata] = useState<IMetadata>({
+  const [metadata, setMetadata] = useState<any>({
     name: "",
     description: "",
     image: null,
@@ -48,30 +48,32 @@ export default function MyNFTs() {
       const attIndex = name.split(".")[1];
 
       attributes[attIndex][attName] = value;
-      setMetadata((prev) => ({ ...prev, attributes }));
+      setMetadata((prev: any) => ({ ...prev, attributes }));
     } else {
-      setMetadata((prev) => ({ ...prev, [name]: value }));
+      setMetadata((prev: any) => ({ ...prev, [name]: value }));
     }
   };
 
   const addAttribute = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    setMetadata((prev) => ({
+    setMetadata((prev: any) => ({
       ...prev,
       attributes: [...prev.attributes, { trait_type: "", value: "" }],
     }));
   };
 
   const removeAttribute = (id: number) => {
-    setMetadata((prev) => ({
+    setMetadata((prev: any) => ({
       ...prev,
-      attributes: prev.attributes.filter((x, idx: number) => idx !== id),
+      attributes: prev.attributes.filter((x: any, idx: number) => idx !== id),
     }));
   };
 
   const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setMetadata((prev) => ({ ...prev, image: e?.target?.files[0] }));
+    const file: any = e.target?.files;
+    if (!_.isEmpty(file))
+      setMetadata((prev: any) => ({ ...prev, image: file[0] }));
   };
 
   const onMintNft = async (e: MouseEvent<HTMLButtonElement>) => {
@@ -86,7 +88,7 @@ export default function MyNFTs() {
       if (!nftImageUrl)
         throw Error("Error: Something went wrong in uploading NFT image");
 
-      setMetadata((prev) => ({ ...prev, image: nftImageUrl }));
+      setMetadata((prev: any) => ({ ...prev, image: nftImageUrl }));
 
       await new Promise((r) => setTimeout(r, 1000));
 
@@ -101,14 +103,14 @@ export default function MyNFTs() {
       if (!nft) throw Error("Error: Something went wrong in minting your nft");
 
       setIsLoading(false);
-      setSnackbar((prev) => ({
+      setSnackbar((prev: any) => ({
         ...prev,
         content: message,
         isShow: true,
         type: "success",
       }));
     } catch (error: any) {
-      setSnackbar((prev) => ({
+      setSnackbar((prev: any) => ({
         ...prev,
         content: parseWalletError(error),
         isShow: true,
@@ -266,7 +268,7 @@ export default function MyNFTs() {
               className="flex-1"
               disabled={
                 !(
-                  Object.keys(metadata).every((i: string) =>
+                  Object.keys(metadata).every((i: string | number) =>
                     _.isEqual(i, "image")
                       ? !_.isNil(metadata[i])
                       : _.size(metadata[i]) > 0

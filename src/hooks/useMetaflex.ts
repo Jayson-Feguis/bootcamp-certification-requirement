@@ -2,15 +2,10 @@ import { useEffect, useCallback, useMemo } from "react";
 import { useConnection } from ".";
 import {
   Metaplex,
-  keypairIdentity,
   bundlrStorage,
-  MetaplexFile,
-  MetaplexFileContent,
   toMetaplexFile,
   walletAdapterIdentity,
-  NFT,
 } from "@metaplex-foundation/js";
-import { Keypair } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import useJsonStore from "@/zustand/store";
 import { dateOffset } from "@/helpers/utils";
