@@ -1,62 +1,7 @@
 import React, { useCallback, useState, useEffect, useRef } from "react";
 import _ from "lodash";
 import { useTimer } from "react-use-precision-timer";
-
-const tileArray = [
-  "👣",
-  "👀",
-  "👓",
-  "🧥",
-  "🎓",
-  "👑",
-  "☂️",
-  "💍",
-  "🦷",
-  "👁",
-  "🎅",
-  "⛑",
-  "🥼",
-  "😍",
-  "🤖",
-  "👻",
-  "🙀",
-  "💀",
-  "🤡",
-  "🦴",
-  "👒",
-  "✌🏻",
-  "🤟🏻",
-  "😶‍🌫️",
-  "🥸",
-  "😇",
-  "👺",
-  "😷",
-  "🌕",
-  "⭐️",
-  "❄️",
-  "🍋",
-  "🍥",
-  "🏐",
-  "🏀",
-  "🔑",
-  "💊",
-  "🤍",
-  "💡",
-  "💿",
-  "🎺",
-  "🥛",
-  "🍼",
-  "🐼",
-  "🐧",
-  "🐔",
-  "🐇",
-  "🌸",
-  "🎄",
-  "🐥",
-  "🐶",
-  "🐰",
-  "🦁",
-];
+import tileArray from "@/assets/json/tile.json";
 
 export interface ICount {
   game: String;
@@ -74,8 +19,6 @@ function useTileGame() {
   const [tiles, setTiles] = useState<String[]>([]);
   const [isStarted, setIsStarted] = useState<Boolean>(false);
   const [isWinner, setIsWinner] = useState<Boolean>(false);
-  const [isSaved, setIsSaved] = useState<Boolean>(false);
-  const [winnerTime, setWinnerTime] = useState<Number>(0);
 
   const pointPerGuess = 10;
 
@@ -133,8 +76,6 @@ function useTileGame() {
         ? _.shuffle(_.uniq(tileArray)).slice(0, (modeNumber * modeNumber) / 2)
         : [];
 
-    console.log(_.size(modeTiles));
-
     setTiles(_.shuffle([...modeTiles, ...modeTiles]));
     setCount((prev) => ({ ...prev, mode: modeByUser }));
   }, []);
@@ -142,7 +83,6 @@ function useTileGame() {
   const reset = useCallback(() => {
     setIsWinner(false);
     setIsStarted(false);
-    setWinnerTime(0);
     setClickedCorrectTiles([]);
     setClickedTiles([]);
     setCount({ game: "tile", mode: "", guess: 0, point: 0, time: 0 });
@@ -168,7 +108,7 @@ function useTileGame() {
                 pointPerGuess -
                   Number((getElapsedRunningTime() / 10000).toFixed(2))
               );
-            console.log("Added Points: ", pointToBeAdded);
+
             setCount((prev) => ({
               ...prev,
               point: prev.point + (pointToBeAdded < 1 ? 1 : pointToBeAdded),

@@ -1,7 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
 
 export const LEADERBOARD_PROGRAM_ID = new PublicKey(
-  "76ksujnwvqsPq2V9gfKYgRn1adzw4XifKncbstfSxLCb"
+  process.env.NEXT_PUBLIC_LEADERBOARD_PROGRAM_ID as any
 );
 
 // "A7p31uAccXDCFgbb3VA92iS5LNE9vBA29HgjvmhJCxZT"
@@ -25,8 +25,9 @@ export const FONT = {
   BARRIECITO: "Barriecito",
 };
 
-export const GAME = {
-  TILE: {
+export const GAME = [
+  {
+    TITLE: "tile",
     MODES: ["4x4", "6x6", "8x8"],
   },
-};
+];
