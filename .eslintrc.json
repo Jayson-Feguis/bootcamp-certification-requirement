@@ -2,6 +2,7 @@
   "extends": "next/core-web-vitals",
   "plugins": ["react-hooks"],
   "rules": {
-    "react-hooks/rules-of-hooks": "error" // <--- THIS IS THE NEW RULE
+    "react-hooks/rules-of-hooks": "error", // <--- THIS IS THE NEW RULE
+    "@typescript-eslint/no-explicit-any": 0
   }
 }

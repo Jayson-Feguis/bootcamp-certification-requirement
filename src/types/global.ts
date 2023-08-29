@@ -24,5 +24,4 @@ export interface IMetadata {
   description: string;
   image?: File | string | null;
   attributes: IAttribute[];
-  [key: number]: string | number;
 }
