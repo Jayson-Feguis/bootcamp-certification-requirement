@@ -5,6 +5,7 @@ import { StateCreator } from "zustand";
 export interface IMyNftsSlice {
   myNfts: IInitialState & { info: NFT[] };
   getMyNfts: (nfts: NFT[]) => void;
+  addMyNfts: (nft: NFT) => void;
   resetMyNfts: () => void;
 }
 
@@ -30,6 +31,18 @@ const myNftsSlice: StateCreator<IMyNftsSlice> = (set) => ({
     set((state) => ({
       ...state,
       myNfts: objState([false, true, nfts, null, Date.now()]),
+    }));
+  },
+  addMyNfts: (nft) => {
+    set((state) => ({
+      ...state,
+      myNfts: objState([
+        false,
+        true,
+        [...state.myNfts.info, nft],
+        null,
+        Date.now(),
+      ]),
     }));
   },
   resetMyNfts: () => {

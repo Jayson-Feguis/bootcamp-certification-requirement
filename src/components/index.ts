@@ -1,6 +1,7 @@
 import Header from "./common/Header";
 import Layout from "./common/Layout";
 import PageHeader from "./common/PageHeader";
+import CustomTextfield from "./common/textfield/CustomTextfield";
 import TitleHeader from "./common/typography/TitleHeader";
 import CustomModal from "./custom/CustomModal";
 import CustomNftCard from "./custom/CustomNftCard";
@@ -18,4 +19,5 @@ export {
   PageHeader,
   CustomSelectWalletButton,
   TitleHeader,
+  CustomTextfield,
 };

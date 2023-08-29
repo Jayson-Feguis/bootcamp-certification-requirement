@@ -68,7 +68,7 @@ export default function Home() {
       <Box className="flex justify-center items-center flex-col gap-3">
         <Typography variant="h6">Choose Mode</Typography>
         <Box className="flex gap-2">
-          {GAME.TILE.MODES.map((i) => (
+          {GAME.find((i: any) => _.isEqual(i.TITLE, "tile"))?.MODES.map((i) => (
             <Button
               key={i}
               variant="contained"
@@ -238,7 +238,7 @@ export default function Home() {
 
   return (
     <>
-      <Box className="flex flex-col items-center min-h-[calc(100vh-60px)] justify-center gap-10">
+      <Box className="flex flex-col items-center min-h-[calc(100vh-60px)] gap-10">
         <TitleHeader title="TILE Game" />
         {!isWinner && !isStarted && renderPlay()}
         {/* ------------------------------ PLAYER POINTS ----------------------------- */}
