@@ -8,6 +8,7 @@ import {
   MetaplexFileContent,
   toMetaplexFile,
   walletAdapterIdentity,
+  NFT,
 } from "@metaplex-foundation/js";
 import { Keypair } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -98,7 +99,7 @@ function useMetaflex() {
   );
 
   const mintNFT = useCallback(async (metadataURI: string, metadata: any) => {
-    const { nft } = await metaplex
+    const nft: any = await metaplex
       .nfts()
       .create(
         {
@@ -110,9 +111,14 @@ function useMetaflex() {
       )
       .catch((e) => console.log(e));
 
-    addMyNfts(nft.json);
-
-    return { message: "NFT minted successfully", nft };
+    if (nft) {
+      addMyNfts(nft.nft.json);
+      return { message: "NFT minted successfully", nft };
+    } else {
+      // Handle the case where nft is undefined or null
+      console.log("NFT creation failed");
+      return { message: "NFT creation failed" };
+    }
   }, []);
 
   return { myNfts, uploadNFTImage, uploadNFTMetadata, mintNFT };
