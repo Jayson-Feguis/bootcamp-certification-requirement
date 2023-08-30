@@ -26,6 +26,7 @@
     "axios": "^1.4.0",
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.19",
+    "eslint-plugin-react-hooks": "^5.0.0-canary-ddff50469-20230829",
     "framer-motion": "^10.16.1",
     "lodash": "^4.17.21",
     "next": "13.4.19",

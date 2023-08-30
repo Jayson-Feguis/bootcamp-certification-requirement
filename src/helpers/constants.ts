@@ -1,5 +1,9 @@
 import { PublicKey } from "@solana/web3.js";
-import localFont from 'next/font/local'
+import localFont from "next/font/local";
+
+const playMeGames = localFont({
+  src: "../assets/fonts/PlaymegamesReguler-2OOee.ttf",
+});
 
 export const LEADERBOARD_PROGRAM_ID = new PublicKey(
   process.env.NEXT_PUBLIC_LEADERBOARD_PROGRAM_ID as any
@@ -22,12 +26,9 @@ export const COLOR = {
 export const FONT = {
   PRIMARY: "Poppins",
 
-  PLAYMEGAMES: localFont({
-    src: "../../../assets/fonts/PlaymegamesReguler-2OOee.ttf",
-  }).style.fontFamily,
+  PLAYMEGAMES: playMeGames.style.fontFamily,
   BARRIECITO: "Barriecito",
 };
-
 
 export const GAME = [
   {

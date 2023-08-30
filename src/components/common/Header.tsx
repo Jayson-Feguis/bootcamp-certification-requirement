@@ -76,8 +76,8 @@ const Header: FC = () => {
         sx={{ background: COLOR.PRIMARY, boxShadow: "none" }}
       >
         <Container maxWidth="lg">
-          <Box className="flex justify-between w-full">
-            <Box className={`!flex gap-5 items-center !flex-1`}>
+          <Box className="flex justify-between w-full py-3">
+            <Box className={`!flex gap-5 items-center max-w-[400px]`}>
               <Link href={Routes.Game}>Play Games</Link>
               <Link href={Routes.Leaderboard}>Leaderboard</Link>
               {publicKey && <Link href={Routes.MyNFTs}>My NFTs</Link>}

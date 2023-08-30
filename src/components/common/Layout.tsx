@@ -16,7 +16,7 @@ const Layout: FC<Props> = ({ children }) => {
         <Wallet>
           <Header />
           <Box className={`!bg-[#11141E] min-h-screen`}>
-            <Container maxWidth="lg" className="pt-[60px] relative">
+            <Container maxWidth="lg" className="pt-[100px] relative">
               {children}
             </Container>
           </Box>
