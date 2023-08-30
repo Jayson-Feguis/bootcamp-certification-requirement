@@ -1,21 +1,23 @@
 "use client";
-import React, { FC, useCallback, useEffect } from "react";
+import React, { FC, useCallback, useEffect, useMemo } from "react";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { Keypair, SystemProgram, Transaction } from "@solana/web3.js";
-import { parseWalletError } from "@/helpers/utils";
+import { parseWalletError, toSentenceCase } from "@/helpers/utils";
 import { useSnackbarContext } from "@/context";
 import { CustomSelectWalletButton, CustomSnackbar } from "..";
 import Link from "next/link";
 import { AppBar, Box, Container } from "@mui/material";
-import { COLOR, FONT } from "@/helpers/constants";
+import { COLOR } from "@/helpers/constants";
 import { useRouter } from "next/router";
 import useJsonStore from "@/zustand/store";
 import Routes from "@/routes";
+import Head from "next/head";
+import _ from "lodash";
 
 const Header: FC = () => {
   const router = useRouter();
-  const { resetMyNfts } = useJsonStore();
+  const { resetMyNfts, resetLeaderboard } = useJsonStore();
   const { setSnackbar } = useSnackbarContext();
   const { connection } = useConnection();
   const { publicKey, sendTransaction, connected, connecting } = useWallet();
@@ -25,11 +27,12 @@ const Header: FC = () => {
       if (!connected) {
         router.push(Routes.Game);
         resetMyNfts();
+        resetLeaderboard();
       } else {
         router.push(Routes.MyNFTs);
       }
     }
-  }, [connecting]);
+  }, [publicKey, connecting]);
 
   const onClick = useCallback(async () => {
     try {
@@ -69,8 +72,24 @@ const Header: FC = () => {
     }
   }, [publicKey, sendTransaction, connection, setSnackbar]);
 
+  const renderHead = useMemo(
+    () => (
+      <Head>
+        <title>{`JSON | ${toSentenceCase(
+          _.isEqual(router.pathname, "/") ? "Home" : router.pathname
+        )}`}</title>
+        <meta
+          name="JSON"
+          content="NFT and Game dApp using NextJS and Anchor Framework with Solana Blockchain"
+        />
+      </Head>
+    ),
+    [router.pathname]
+  );
+
   return (
     <>
+      {renderHead}
       <AppBar
         component="header"
         sx={{ background: COLOR.PRIMARY, boxShadow: "none" }}

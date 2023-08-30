@@ -90,6 +90,7 @@ function useLeaderboard() {
     if (program && publicKey) {
       try {
         setIsLoading(true);
+        await new Promise((r) => setTimeout(r, 2000));
         let leaderboardAccount: any =
           await program.account.leaderboardAccount.all(); // all([authorFilter(publicKey.toString())])
 

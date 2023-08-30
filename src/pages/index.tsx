@@ -53,12 +53,17 @@ export default function Home() {
 
   const renderPlay = () => (
     <Box
-      className="flex justify-center items-center flex-col text-white w-[500px] h-[500px] bg-opacity-70 rounded-lg gap-3"
+      className="flex justify-center items-center text-white w-[500px] h-[500px] bg-opacity-70 rounded-lg gap-10"
       sx={{
         background: `${COLOR.SECONDARY} !important`,
+        flexDirection: publicKey ? "column" : "column-reverse",
       }}
     >
-      <Typography variant="h4">You wanna play?</Typography>
+      <Typography variant={publicKey ? "h4" : "body2"}>
+        {publicKey
+          ? "Start Game"
+          : "Please connect your wallet to play the game!"}
+      </Typography>
       {!connected && !publicKey ? <CustomSelectWalletButton /> : renderModes()}
     </Box>
   );
@@ -101,8 +106,8 @@ export default function Home() {
 
   const renderPlayAgain = () => (
     <Box className="flex justify-center items-center flex-col text-white gap-10 w-full">
-      <Box className="flex flex-col gap-2 text-center">
-        <Typography variant="h4" className="font-bold">
+      <Box className="flex flex-col text-center">
+        <Typography variant="h4" gutterBottom className="font-bold">
           You won!
         </Typography>
         <Typography
@@ -111,6 +116,12 @@ export default function Home() {
             color: COLOR.YELLOW,
           }}
         >{`You've got ${count.point} Points!`}</Typography>
+        <Typography
+          variant="caption"
+          sx={{
+            color: COLOR.WHITE,
+          }}
+        >{`In just ${count.time} seconds`}</Typography>
       </Box>
       <Box className="flex flex-col gap-2">
         {!isSaved && (
@@ -278,9 +289,9 @@ export default function Home() {
               ))}
             </Grid>
             <Box>
-              <Typography variant="caption">
-                (Save the game if you want it to be displayed on the
-                leaderboard)
+              <Typography variant="caption" className="italic opacity-70">
+                Note: Save the game if you want it to be displayed on the
+                leaderboard
               </Typography>
             </Box>
             <Box className="flex w-[60%] justify-end gap-3 self-end">
