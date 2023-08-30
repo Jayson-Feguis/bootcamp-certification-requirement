@@ -28,7 +28,7 @@ const CustomNftCard: FC<Props> = ({ image, name, description }) => {
     >
       <CardActionArea component="div">
         <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70]"
+          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] aspect-square object-cover"
           src={image as any}
           alt={name as any}
           width={500}
@@ -46,7 +46,7 @@ const CustomNftCard: FC<Props> = ({ image, name, description }) => {
           <Typography
             variant="body2"
             color="text.secondary"
-            className="!text-white"
+            className="!text-white overflow-hidden text-ellipsis line-clamp-3 h-[60px] opacity-70"
           >
             {`${description}`}
           </Typography>
