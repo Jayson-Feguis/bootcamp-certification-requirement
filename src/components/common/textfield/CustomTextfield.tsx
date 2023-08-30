@@ -11,7 +11,7 @@ const CustomTextfield: FC<InputBaseProps> = (props) => {
       </Typography>
       <InputBase
         {...props}
-        className="!text-white px-3 py-1 rounded-md w-full"
+        className="!text-white !px-3 !py-1 !rounded-md !w-full"
         sx={{ background: COLOR.PRIMARY }}
       />
     </Box>

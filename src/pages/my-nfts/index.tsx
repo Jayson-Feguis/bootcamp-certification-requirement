@@ -35,7 +35,7 @@ export default function MyNFTs() {
     name: "",
     description: "",
     image: null,
-    attributes: [],
+    attributes: [{ trait_type: "", value: "" }],
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -109,6 +109,13 @@ export default function MyNFTs() {
         isShow: true,
         type: "success",
       }));
+      onClose();
+      setMetadata({
+        name: "",
+        description: "",
+        image: null,
+        attributes: [{ trait_type: "", value: "" }],
+      });
     } catch (error: any) {
       setSnackbar((prev: any) => ({
         ...prev,
@@ -116,6 +123,7 @@ export default function MyNFTs() {
         isShow: true,
         type: "error",
       }));
+      setIsLoading(false);
     }
   };
 
@@ -156,7 +164,7 @@ export default function MyNFTs() {
             ))
           : null}
       </Grid>
-      <CustomModal open={open} onClose={onClose}>
+      <CustomModal open={open}>
         <Box
           component="form"
           className="flex flex-col gap-3"
@@ -173,7 +181,8 @@ export default function MyNFTs() {
               inputProps={{
                 accept: "image/jpeg, image/png, image/jpg",
               }}
-              className="text-white"
+              className="!text-white"
+              disabled={isLoading}
             />
           </Box>
 
@@ -182,6 +191,7 @@ export default function MyNFTs() {
             placeholder="Type your nft name"
             onChange={onChange}
             value={metadata.name}
+            disabled={isLoading}
           />
           <CustomTextfield
             name="description"
@@ -190,6 +200,7 @@ export default function MyNFTs() {
             multiline
             onChange={onChange}
             value={metadata.description}
+            disabled={isLoading}
           />
           <Box className="flex flex-col gap-3">
             <Box className="flex justify-between">
@@ -205,51 +216,62 @@ export default function MyNFTs() {
                 sx={{
                   background: `${COLOR.TERTIARY} !important`,
                 }}
+                disabled={isLoading}
               >
                 Add
               </Button>
             </Box>
             <Box className="flex flex-col px-5 justify-start items-center max-h-[300px] overflow-auto">
-              {_.size(metadata.attributes) > 0
-                ? metadata.attributes.map((i: any, idx: number) => (
-                    <Grid
-                      container
-                      key={`${idx}`}
-                      columnGap={2}
-                      className="flex justify-center items-end"
-                    >
-                      <Grid item xs={12} sm={5}>
-                        <CustomTextfield
-                          name={`trait_type.${idx}`}
-                          placeholder="Trait type"
-                          onChange={onChange}
-                          value={metadata.attributes[idx].trait_type}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={5}>
-                        <CustomTextfield
-                          name={`value.${idx}`}
-                          placeholder="value"
-                          onChange={onChange}
-                          value={metadata.attributes[idx].value}
-                        />
-                      </Grid>
-                      <Grid
-                        item
-                        xs={12}
-                        sm={1}
-                        className="flex items-end w-full h-full"
-                      >
-                        <IconButton
-                          onClick={() => removeAttribute(idx)}
-                          className="text-red-900"
-                        >
-                          <FaTrash />
-                        </IconButton>
-                      </Grid>
+              {_.size(metadata.attributes) > 0 ? (
+                metadata.attributes.map((i: any, idx: number) => (
+                  <Grid
+                    container
+                    key={`${idx}`}
+                    columnGap={2}
+                    className="flex justify-center items-end"
+                  >
+                    <Grid item xs={12} sm={5}>
+                      <CustomTextfield
+                        name={`trait_type.${idx}`}
+                        placeholder="Trait type"
+                        onChange={onChange}
+                        value={metadata.attributes[idx].trait_type}
+                        disabled={isLoading}
+                      />
                     </Grid>
-                  ))
-                : null}
+                    <Grid item xs={12} sm={5}>
+                      <CustomTextfield
+                        name={`value.${idx}`}
+                        placeholder="value"
+                        onChange={onChange}
+                        value={metadata.attributes[idx].value}
+                        disabled={isLoading}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      sm={1}
+                      className="flex items-end w-full h-full"
+                    >
+                      <IconButton
+                        onClick={() => removeAttribute(idx)}
+                        className="text-red-900"
+                        disabled={isLoading}
+                      >
+                        <FaTrash />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                ))
+              ) : (
+                <Typography
+                  variant="body1"
+                  className="text-white opacity-70 py-5"
+                >
+                  Note: Please add attributes
+                </Typography>
+              )}
             </Box>
           </Box>
           <Box className="flex w-[60%] justify-end gap-3 self-end">
@@ -259,6 +281,7 @@ export default function MyNFTs() {
               sx={{
                 color: COLOR.WHITE,
               }}
+              disabled={isLoading}
             >
               Cancel
             </Button>
@@ -276,7 +299,7 @@ export default function MyNFTs() {
                   metadata.attributes.every(
                     (i: any) => !_.isEmpty(i.trait_type) && !_.isEmpty(i.value)
                   )
-                )
+                ) || isLoading
               }
               sx={{
                 background: `${COLOR.YELLOW} !important`,
@@ -288,14 +311,13 @@ export default function MyNFTs() {
                 },
               }}
             >
-              {/* {isLeaderboardLoading ? (
-              <>
-                <CircularProgress size={16} className="mr-3" /> Save
-              </>
-            ) : (
-              "Save"
-            )} */}
-              Mint
+              {isLoading ? (
+                <>
+                  <CircularProgress size={16} className="mr-3" /> Minting
+                </>
+              ) : (
+                "Mint NFT"
+              )}
             </Button>
           </Box>
         </Box>
