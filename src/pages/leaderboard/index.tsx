@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { CustomSkeleton, TitleHeader } from "@/components";
+import { TitleHeader } from "@/components";
 import { useLeaderboard, useSelected } from "@/hooks";
 import { Grid, Box, Typography, Button, Skeleton } from "@mui/material";
 import useJsonStore from "@/zustand/store";
