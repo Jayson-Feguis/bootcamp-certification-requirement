@@ -1,5 +1,5 @@
 {
-  "extends": ["next/core-web-vitals", "react-app"],
+  "extends": ["next/core-web-vitals"],
   "plugins": ["react-hooks"],
   "rules": {
     "react-hooks/rules-of-hooks": "error", // <--- THIS IS THE NEW RULE
