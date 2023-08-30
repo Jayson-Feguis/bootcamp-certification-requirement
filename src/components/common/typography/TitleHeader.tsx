@@ -1,18 +1,13 @@
-import { COLOR } from "@/helpers/constants";
+import { COLOR, FONT } from "@/helpers/constants";
 import { Typography } from "@mui/material";
 import React, { FC } from "react";
-import localFont from "next/font/local";
-
-const PLAYMEGAMES = localFont({
-  src: "../../../assets/fonts/PlaymegamesReguler-2OOee.ttf",
-});
 
 const TitleHeader: FC<{ title: string }> = ({ title }) => {
   return (
     <Typography
       variant="h1"
       sx={{
-        ...PLAYMEGAMES.style,
+        fontFamily: FONT.PLAYMEGAMES,
         color: COLOR.YELLOW,
         textAlign: "center",
         textShadow:

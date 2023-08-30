@@ -75,13 +75,15 @@ const Header: FC = () => {
         component="header"
         sx={{ background: COLOR.PRIMARY, boxShadow: "none" }}
       >
-        <Container maxWidth="lg" className="flex justify-between ">
-          <Box className={`flex gap-5 items-center`}>
-            <Link href={Routes.Game}>Play Games</Link>
-            <Link href={Routes.Leaderboard}>Leaderboard</Link>
-            {publicKey && <Link href={Routes.MyNFTs}>My NFTs</Link>}
+        <Container maxWidth="lg">
+          <Box className="flex justify-between w-full">
+            <Box className={`!flex gap-5 items-center !flex-1`}>
+              <Link href={Routes.Game}>Play Games</Link>
+              <Link href={Routes.Leaderboard}>Leaderboard</Link>
+              {publicKey && <Link href={Routes.MyNFTs}>My NFTs</Link>}
+            </Box>
+            <CustomSelectWalletButton />
           </Box>
-          <CustomSelectWalletButton />
         </Container>
       </AppBar>
       {/* <button onClick={onClick} disabled={!publicKey}>
