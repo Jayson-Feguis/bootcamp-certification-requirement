@@ -22,21 +22,21 @@ const social = [
 const Footer: FC = () => {
   return (
     <Box
-      className="w-full flex justify-center py-10 !text-white"
+      className="w-full !flex !justify-center !py-10 !text-white"
       sx={{ background: COLOR.SECONDARY }}
     >
       <Container
         maxWidth="md"
-        className="flex justify-center items-center flex-col"
+        className="!flex !justify-center !items-center !flex-col"
       >
-        <Box className="flex gap-2">
+        <Box className="!flex !gap-2">
           <Image src={logo} alt="JSON Logo" width={50} height={50} />
-          <Box className="flex gap-2 justify-center items-center">
+          <Box className="!flex !gap-2 !justify-center !items-center">
             <Typography variant="body2">Developed by:</Typography>
             <Typography variant="body1">JSON</Typography>
           </Box>
         </Box>
-        <Box className="flex gap-1">
+        <Box className="!flex !gap-1">
           {social.map((i) => (
             <IconButton
               key={i.title}
