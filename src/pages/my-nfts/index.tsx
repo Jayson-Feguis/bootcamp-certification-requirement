@@ -256,7 +256,7 @@ export default function MyNFTs() {
                     >
                       <IconButton
                         onClick={() => removeAttribute(idx)}
-                        className="text-red-900"
+                        className="!text-red-900"
                         disabled={isLoading}
                       >
                         <FaTrash />
