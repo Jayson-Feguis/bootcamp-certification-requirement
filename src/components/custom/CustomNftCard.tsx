@@ -31,7 +31,7 @@ const CustomNftCard: FC<Props> = ({ image, name, description }) => {
           className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] aspect-square object-cover"
           src={image as any}
           alt={name as any}
-          width={500}
+          width={1000}
           height={500}
         />
         <CardContent>

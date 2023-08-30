@@ -1,16 +1,22 @@
 import { useState, useEffect } from "react";
-import { TitleHeader } from "@/components";
+import { CustomSkeleton, TitleHeader } from "@/components";
 import { useLeaderboard, useSelected } from "@/hooks";
-import { Grid, Box, Typography, Button } from "@mui/material";
+import { Grid, Box, Typography, Button, Skeleton } from "@mui/material";
 import useJsonStore from "@/zustand/store";
 import _ from "lodash";
-import { dateOffset, shortenAddress, toSentenceCase } from "@/helpers/utils";
+import {
+  dateOffset,
+  generateNumberArray,
+  shortenAddress,
+  toSentenceCase,
+} from "@/helpers/utils";
 import { COLOR, FONT, GAME } from "@/helpers/constants";
 import { ILeaderboard } from "@/types/global";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 export default function Leaderboard() {
   const { leaderboard } = useJsonStore();
-  const { fetchLeaderboard, filterLeaderboard } = useLeaderboard();
+  const { isLoading, fetchLeaderboard, filterLeaderboard } = useLeaderboard();
   const { selected: selectedGame, onSelect: onSelectGame } = useSelected(
     GAME[0]?.TITLE
   );
@@ -18,6 +24,8 @@ export default function Leaderboard() {
     useSelected(
       GAME.find((i: any) => _.isEqual(i.TITLE, selectedGame))?.MODES[0]
     );
+
+  const { publicKey } = useWallet();
 
   const [filteredLeaderboard, setFilteredLeaderboard] = useState<
     ILeaderboard[]
@@ -27,7 +35,7 @@ export default function Leaderboard() {
     if (!leaderboard.updatedAt) fetchLeaderboard();
     if (new Date() > dateOffset(10000, leaderboard.updatedAt as any))
       fetchLeaderboard();
-  }, []);
+  }, [publicKey]);
 
   useEffect(() => {
     if (_.size(leaderboard) > 0) setFilteredLeaderboard(filterLeaderboard());
@@ -130,54 +138,73 @@ export default function Leaderboard() {
               </Grid>
             </Grid>
           </Grid>
-          {_.size(filteredLeaderboard) > 0
-            ? filteredLeaderboard.map((i: any, idx: number) => (
-                <Grid item xs={12} key={`${idx}-${i.user}`} className="px-10">
-                  <Grid
-                    container
-                    className="w-full flex justify-center text-white p-5 rounded-xl"
-                    sx={{
-                      background: COLOR.SECONDARY,
-                      border: `1px solid ${COLOR.SECONDARY}`,
-                      transition: "all 0.2s ease",
-                      opacity: 1,
-                      ":hover": {
-                        border: `1px solid ${COLOR.TERTIARY}`,
-                        opacity: 0.9,
-                        zIndex: 1,
-                      },
-                    }}
-                  >
-                    <Grid item xs={1} className={gridItemStyle}>
-                      <Box
-                        className="flex rounded-full aspect-square w-10 justify-center items-center"
-                        sx={{
-                          background: COLOR.YELLOW,
-                          fontFamily: FONT.PLAYMEGAMES,
-                          color: COLOR.BLACK,
-                        }}
-                      >
-                        {i.rank}
-                      </Box>
-                    </Grid>
-                    <Grid item xs={5} className={gridItemStyle}>
-                      <Typography className="truncate">
-                        {shortenAddress(i.user)}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={1} className={gridItemStyle}>
-                      <Typography>{i.guess}</Typography>
-                    </Grid>
-                    <Grid item xs={1} className={gridItemStyle}>
-                      <Typography>{i.time}</Typography>
-                    </Grid>
-                    <Grid item xs={1} className={gridItemStyle}>
-                      <Typography>{i.point}</Typography>
-                    </Grid>
+          {isLoading ? (
+            generateNumberArray(5).map((i) => (
+              <Skeleton
+                key={`${i}`}
+                variant="rounded"
+                width={1200}
+                height={80}
+                animation="wave"
+              />
+            ))
+          ) : _.size(filteredLeaderboard) > 0 ? (
+            filteredLeaderboard.map((i: any, idx: number) => (
+              <Grid item xs={12} key={`${idx}-${i.user}`} className="px-10">
+                <Grid
+                  container
+                  className="w-full flex justify-center text-white p-5 rounded-xl"
+                  sx={{
+                    background: COLOR.SECONDARY,
+                    border: `1px solid ${COLOR.SECONDARY}`,
+                    transition: "all 0.2s ease",
+                    opacity: 1,
+                    ":hover": {
+                      border: `1px solid ${COLOR.TERTIARY}`,
+                      opacity: 0.9,
+                      zIndex: 1,
+                    },
+                  }}
+                >
+                  <Grid item xs={1} className={gridItemStyle}>
+                    <Box
+                      className="flex rounded-full aspect-square w-10 justify-center items-center"
+                      sx={{
+                        background: COLOR.YELLOW,
+                        fontFamily: FONT.PLAYMEGAMES,
+                        color: COLOR.BLACK,
+                      }}
+                    >
+                      {i.rank}
+                    </Box>
+                  </Grid>
+                  <Grid item xs={5} className={gridItemStyle}>
+                    <Typography className="truncate">
+                      {shortenAddress(i.user)}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={1} className={gridItemStyle}>
+                    <Typography>{i.guess}</Typography>
+                  </Grid>
+                  <Grid item xs={1} className={gridItemStyle}>
+                    <Typography>{i.time}</Typography>
+                  </Grid>
+                  <Grid item xs={1} className={gridItemStyle}>
+                    <Typography>{i.point}</Typography>
                   </Grid>
                 </Grid>
-              ))
-            : null}
+              </Grid>
+            ))
+          ) : (
+            <Box className="flex flex-col justify-center text-center w-full">
+              <Typography variant="h6" className="text-white py-5">
+                0 Result(s)
+              </Typography>
+              <Typography variant="body1" className="text-white opacity-70">
+                Log in to your account to view the leaderboard
+              </Typography>
+            </Box>
+          )}
         </Grid>
       </Box>
     </Box>

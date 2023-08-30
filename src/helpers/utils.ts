@@ -12,7 +12,12 @@ function authorFilter(authorBase58PublicKey: any) {
 }
 
 function toSentenceCase(str: String) {
-  return str.toLowerCase().charAt(0).toUpperCase() + str.slice(1);
+  let sanitized = str.replaceAll("/", "");
+  const words = sanitized.split("-");
+  const capitalizedWords = words.map(
+    (word) => word.charAt(0).toUpperCase() + word.slice(1)
+  );
+  return capitalizedWords.join(" ");
 }
 
 function dateOffset(offset: number, date?: number) {
@@ -27,7 +32,18 @@ function shortenAddress(address: string) {
   )}`;
 }
 
+function generateNumberArray(number: number) {
+  const result = [];
+
+  for (let i = 1; i <= number; i++) {
+    result.push(i);
+  }
+
+  return result;
+}
+
 export {
+  generateNumberArray,
   parseWalletError,
   authorFilter,
   toSentenceCase,

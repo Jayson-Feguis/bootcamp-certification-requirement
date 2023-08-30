@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useMemo } from "react";
+import { useEffect, useCallback, useMemo, useState } from "react";
 import { useConnection } from ".";
 import {
   Metaplex,
@@ -8,7 +8,8 @@ import {
 } from "@metaplex-foundation/js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import useJsonStore from "@/zustand/store";
-import { dateOffset } from "@/helpers/utils";
+import { dateOffset, parseWalletError } from "@/helpers/utils";
+import { useSnackbarContext } from "@/context";
 
 interface Attribute {
   trait_type: String;
@@ -24,7 +25,10 @@ export interface NFT {
 function useMetaflex() {
   const { connection, endpoint } = useConnection();
   const { myNfts, getMyNfts, addMyNfts } = useJsonStore();
+  const { setSnackbar } = useSnackbarContext();
   const wallet = useWallet();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const metaplex = useMemo(
     () =>
@@ -44,20 +48,35 @@ function useMetaflex() {
   }, []);
 
   const getAllNFTs = useCallback(async () => {
-    if (!wallet.publicKey) return;
+    try {
+      setIsLoading(true);
+      await new Promise((r) => setTimeout(r, 2000));
+      if (!wallet.publicKey) return;
 
-    let nftArray: NFT[] = [];
+      let nftArray: NFT[] = [];
 
-    let raw = await metaplex.nfts().findAllByOwner({ owner: wallet.publicKey });
-    raw = raw.map((i: any) => i?.uri);
+      let raw = await metaplex
+        .nfts()
+        .findAllByOwner({ owner: wallet.publicKey });
+      raw = raw.map((i: any) => i?.uri);
 
-    for (const uri of raw) {
-      const res = await fetch(uri.toString());
-      const data = await res.json();
-      nftArray.push(data);
+      for (const uri of raw) {
+        const res = await fetch(uri.toString());
+        const data = await res.json();
+        nftArray.push(data);
+      }
+
+      getMyNfts(nftArray);
+      setIsLoading(false);
+    } catch (error: any) {
+      setSnackbar((prev) => ({
+        ...prev,
+        content: parseWalletError(error),
+        isShow: true,
+        type: "error",
+      }));
+      setIsLoading(false);
     }
-
-    getMyNfts(nftArray);
   }, [wallet, metaplex, getMyNfts]);
 
   const uploadNFTImage = useCallback(
@@ -70,7 +89,7 @@ function useMetaflex() {
           reader.readAsArrayBuffer(fileData);
 
           reader.onload = async function () {
-            const arrayBuffer: any = reader.result;
+            const arrayBuffer: Buffer = Buffer.from(reader.result as any);
 
             const file = toMetaplexFile(arrayBuffer, "nft.jpg");
             const imageUrl = await metaplex
@@ -110,13 +129,11 @@ function useMetaflex() {
       addMyNfts(nft.nft.json);
       return { message: "NFT minted successfully", nft };
     } else {
-      // Handle the case where nft is undefined or null
-      console.log("NFT creation failed");
       return { message: "NFT creation failed" };
     }
   }, []);
 
-  return { myNfts, uploadNFTImage, uploadNFTMetadata, mintNFT };
+  return { myNfts, uploadNFTImage, uploadNFTMetadata, mintNFT, isLoading };
 }
 
 export default useMetaflex;

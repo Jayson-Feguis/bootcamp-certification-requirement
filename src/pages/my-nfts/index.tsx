@@ -14,8 +14,9 @@ import {
   Typography,
   IconButton,
   Input,
-  InputProps,
+  InputBase,
   CircularProgress,
+  Skeleton,
 } from "@mui/material";
 import { useWallet } from "@solana/wallet-adapter-react";
 import _ from "lodash";
@@ -23,11 +24,17 @@ import { FaTrash } from "react-icons/fa";
 import { AiOutlinePlus } from "react-icons/ai";
 import { COLOR } from "@/helpers/constants";
 import { useSnackbarContext } from "@/context";
-import { parseWalletError } from "@/helpers/utils";
+import { generateNumberArray, parseWalletError } from "@/helpers/utils";
 
 export default function MyNFTs() {
   const { publicKey, connected } = useWallet();
-  const { myNfts, uploadNFTImage, uploadNFTMetadata, mintNFT } = useMetaflex();
+  const {
+    myNfts,
+    uploadNFTImage,
+    uploadNFTMetadata,
+    mintNFT,
+    isLoading: isLoadingMetaflex,
+  } = useMetaflex();
   const { open, onOpen, onClose } = useOpenElement();
   const { setSnackbar } = useSnackbarContext();
 
@@ -144,8 +151,34 @@ export default function MyNFTs() {
           </Button>
         }
       />
-      <Grid container spacing={3} className="min-h-screen">
-        {publicKey && connected && myNfts.info?.length > 0
+      <Grid container spacing={3}>
+        {isLoadingMetaflex
+          ? generateNumberArray(4).map((i) => (
+              <Grid item key={`${i}`} xs={12} sm={6} md={4} lg={3}>
+                <Box
+                  className="flex flex-col gap-3 rounded-lg w-full overflow-hidden"
+                  sx={{
+                    background: COLOR.SECONDARY,
+                    color: COLOR.WHITE,
+                    border: `1px solid ${COLOR.TERTIARY}`,
+                  }}
+                >
+                  <Skeleton
+                    key={`${i}`}
+                    variant="rectangular"
+                    width={1000}
+                    height={270}
+                    animation="wave"
+                  />
+                  <Box className="flex flex-col gap1 p-3">
+                    <Skeleton height={40} />
+                    <Skeleton />
+                    <Skeleton width="60%" />
+                  </Box>
+                </Box>
+              </Grid>
+            ))
+          : publicKey && connected && myNfts.info?.length > 0
           ? myNfts?.info?.map((nft, index) => (
               <Grid
                 item
@@ -221,7 +254,7 @@ export default function MyNFTs() {
                 Add
               </Button>
             </Box>
-            <Box className="flex flex-col px-5 justify-start items-center max-h-[300px] overflow-auto">
+            <Box className="flex flex-col px-5 justify-start items-center max-h-[300px] overflow-auto gap-3">
               {_.size(metadata.attributes) > 0 ? (
                 metadata.attributes.map((i: any, idx: number) => (
                   <Grid
@@ -231,21 +264,25 @@ export default function MyNFTs() {
                     className="flex justify-center items-end"
                   >
                     <Grid item xs={12} sm={5}>
-                      <CustomTextfield
+                      <InputBase
                         name={`trait_type.${idx}`}
                         placeholder="Trait type"
                         onChange={onChange}
                         value={metadata.attributes[idx].trait_type}
                         disabled={isLoading}
+                        className="!text-white !px-3 !py-1 !rounded-md !w-full"
+                        sx={{ background: COLOR.PRIMARY }}
                       />
                     </Grid>
                     <Grid item xs={12} sm={5}>
-                      <CustomTextfield
+                      <InputBase
                         name={`value.${idx}`}
-                        placeholder="value"
+                        placeholder="Value"
                         onChange={onChange}
                         value={metadata.attributes[idx].value}
                         disabled={isLoading}
+                        className="!text-white !px-3 !py-1 !rounded-md !w-full"
+                        sx={{ background: COLOR.PRIMARY }}
                       />
                     </Grid>
                     <Grid
@@ -274,7 +311,7 @@ export default function MyNFTs() {
               )}
             </Box>
           </Box>
-          <Box className="flex w-[60%] justify-end gap-3 self-end">
+          <Box className="flex w-[60%] justify-end gap-3 self-end mt-3">
             <Button
               variant="text"
               onClick={() => onClose()}

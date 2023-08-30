@@ -1,6 +1,6 @@
 {
   "extends": ["next/core-web-vitals", "plugin:react-hooks/recommended"],
-  "plugins": ["react-hooks"],
+  "plugins": [],
   "rules": {
     "react-hooks/rules-of-hooks": "error", // <--- THIS IS THE NEW RULE
     "react-hooks/exhaustive-deps": "off"
