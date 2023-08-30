@@ -1,7 +1,7 @@
+import Footer from "./common/Footer";
 import Header from "./common/Header";
 import Layout from "./common/Layout";
 import PageHeader from "./common/PageHeader";
-import CustomSkeleton from "./common/skeleton/CustomSkeleton";
 import CustomTextfield from "./common/textfield/CustomTextfield";
 import TitleHeader from "./common/typography/TitleHeader";
 import CustomModal from "./custom/CustomModal";
@@ -21,5 +21,5 @@ export {
   CustomSelectWalletButton,
   TitleHeader,
   CustomTextfield,
-  CustomSkeleton,
+  Footer,
 };

@@ -21,3 +21,14 @@
 .wallet-adapter-dropdown-list {
   font-family: 'Poppins !important';
 }
+
+.wallet-adapter-button-trigger {
+  background: #2C2D30 !important;
+  opacity: 1;
+  transition: all 0.2s ease;
+}
+
+.wallet-adapter-button-trigger:hover {
+  background: #2C2D30 !important;
+  opacity: 0.7;
+}

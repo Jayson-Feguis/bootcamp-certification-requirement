@@ -5,6 +5,7 @@ import { Grid, Box, Typography, Button, Skeleton } from "@mui/material";
 import useJsonStore from "@/zustand/store";
 import _ from "lodash";
 import {
+  computeSkeletonOpacity,
   dateOffset,
   generateNumberArray,
   shortenAddress,
@@ -17,6 +18,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 export default function Leaderboard() {
   const { leaderboard } = useJsonStore();
   const { isLoading, fetchLeaderboard, filterLeaderboard } = useLeaderboard();
+  const { publicKey } = useWallet();
   const { selected: selectedGame, onSelect: onSelectGame } = useSelected(
     GAME[0]?.TITLE
   );
@@ -25,11 +27,12 @@ export default function Leaderboard() {
       GAME.find((i: any) => _.isEqual(i.TITLE, selectedGame))?.MODES[0]
     );
 
-  const { publicKey } = useWallet();
-
   const [filteredLeaderboard, setFilteredLeaderboard] = useState<
     ILeaderboard[]
   >([]);
+
+  const gridItemStyle = "flex items-center";
+  const numberOfSkeleton = 5;
 
   useEffect(() => {
     if (!leaderboard.updatedAt) fetchLeaderboard();
@@ -40,8 +43,6 @@ export default function Leaderboard() {
   useEffect(() => {
     if (_.size(leaderboard) > 0) setFilteredLeaderboard(filterLeaderboard());
   }, [leaderboard]);
-
-  const gridItemStyle = "flex items-center";
 
   return (
     <Box className="flex flex-col items-center min-h-[calc(100vh-60px)] gap-10">
@@ -139,13 +140,16 @@ export default function Leaderboard() {
             </Grid>
           </Grid>
           {isLoading ? (
-            generateNumberArray(5).map((i) => (
+            generateNumberArray(numberOfSkeleton).map((i) => (
               <Skeleton
                 key={`${i}`}
                 variant="rounded"
                 width={1200}
                 height={80}
                 animation="wave"
+                sx={{
+                  opacity: computeSkeletonOpacity(numberOfSkeleton, i),
+                }}
               />
             ))
           ) : _.size(filteredLeaderboard) > 0 ? (
