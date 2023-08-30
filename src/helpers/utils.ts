@@ -42,6 +42,13 @@ function generateNumberArray(number: number) {
   return result;
 }
 
+function computeSkeletonOpacity(numberOfSkeleton: number, index: number) {
+  return (
+    generateNumberArray(numberOfSkeleton).reverse()[index - 1] /
+    numberOfSkeleton
+  );
+}
+
 export {
   generateNumberArray,
   parseWalletError,
@@ -49,4 +56,5 @@ export {
   toSentenceCase,
   dateOffset,
   shortenAddress,
+  computeSkeletonOpacity,
 };

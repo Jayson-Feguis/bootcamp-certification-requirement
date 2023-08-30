@@ -24,7 +24,11 @@ import { FaTrash } from "react-icons/fa";
 import { AiOutlinePlus } from "react-icons/ai";
 import { COLOR } from "@/helpers/constants";
 import { useSnackbarContext } from "@/context";
-import { generateNumberArray, parseWalletError } from "@/helpers/utils";
+import {
+  computeSkeletonOpacity,
+  generateNumberArray,
+  parseWalletError,
+} from "@/helpers/utils";
 
 export default function MyNFTs() {
   const { publicKey, connected } = useWallet();
@@ -37,6 +41,8 @@ export default function MyNFTs() {
   } = useMetaflex();
   const { open, onOpen, onClose } = useOpenElement();
   const { setSnackbar } = useSnackbarContext();
+
+  const numberOfSkeleton = 4;
 
   const [metadata, setMetadata] = useState<any>({
     name: "",
@@ -138,7 +144,7 @@ export default function MyNFTs() {
     <>
       <PageHeader
         title="My NFTs"
-        description="All about my NFTs"
+        description="Discover Unique Digital Creations on My NFT Page"
         action={
           <Button
             onClick={onOpen}
@@ -153,14 +159,14 @@ export default function MyNFTs() {
       />
       <Grid container spacing={3}>
         {isLoadingMetaflex
-          ? generateNumberArray(4).map((i) => (
+          ? generateNumberArray(numberOfSkeleton).map((i) => (
               <Grid item key={`${i}`} xs={12} sm={6} md={4} lg={3}>
                 <Box
                   className="flex flex-col gap-3 rounded-lg w-full overflow-hidden"
                   sx={{
                     background: COLOR.SECONDARY,
                     color: COLOR.WHITE,
-                    border: `1px solid ${COLOR.TERTIARY}`,
+                    opacity: computeSkeletonOpacity(numberOfSkeleton, i),
                   }}
                 >
                   <Skeleton

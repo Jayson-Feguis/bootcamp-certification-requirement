@@ -1,5 +1,5 @@
 import React, { FC, ReactNode } from "react";
-import { Wallet, Header } from "..";
+import { Wallet, Header, Footer } from "..";
 import ContextProvider from "@/context";
 import { Box, Container } from "@mui/material";
 import { ThemeProvider } from "@mui/material";
@@ -16,10 +16,11 @@ const Layout: FC<Props> = ({ children }) => {
         <Wallet>
           <Header />
           <Box className={`!bg-[#11141E] min-h-screen`}>
-            <Container maxWidth="lg" className="pt-[100px] relative">
+            <Container maxWidth="lg" className="py-[100px] relative">
               {children}
             </Container>
           </Box>
+          <Footer />
         </Wallet>
       </ThemeProvider>
     </ContextProvider>

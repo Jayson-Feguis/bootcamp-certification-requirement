@@ -25,6 +25,7 @@ const CustomNftCard: FC<Props> = ({ image, name, description }) => {
         color: COLOR.WHITE,
         border: `1px solid ${COLOR.TERTIARY}`,
       }}
+      className="rounded-lg"
     >
       <CardActionArea component="div">
         <Image

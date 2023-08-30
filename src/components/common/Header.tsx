@@ -14,6 +14,22 @@ import useJsonStore from "@/zustand/store";
 import Routes from "@/routes";
 import Head from "next/head";
 import _ from "lodash";
+import jsonIcon from "@/assets/images/icon.ico";
+
+const pages = [
+  {
+    title: "Play Games",
+    route: Routes.Game,
+  },
+  {
+    title: "Leaderboard",
+    route: Routes.Leaderboard,
+  },
+  {
+    title: "My NFTs",
+    route: Routes.MyNFTs,
+  },
+];
 
 const Header: FC = () => {
   const router = useRouter();
@@ -82,24 +98,37 @@ const Header: FC = () => {
           name="JSON"
           content="NFT and Game dApp using NextJS and Anchor Framework with Solana Blockchain"
         />
+        <link rel="shortcut icon" href="/icon.ico" />
       </Head>
     ),
     [router.pathname]
   );
+
+  const linkStyle = "transition-all duration-[0.2s] ease hover:!text-[#FFC107]";
 
   return (
     <>
       {renderHead}
       <AppBar
         component="header"
-        sx={{ background: COLOR.PRIMARY, boxShadow: "none" }}
+        sx={{ background: COLOR.PRIMARY, boxShadow: "none", zIndex: 1039 }}
       >
         <Container maxWidth="lg">
           <Box className="flex justify-between w-full py-3">
             <Box className={`!flex gap-5 items-center max-w-[400px]`}>
-              <Link href={Routes.Game}>Play Games</Link>
-              <Link href={Routes.Leaderboard}>Leaderboard</Link>
-              {publicKey && <Link href={Routes.MyNFTs}>My NFTs</Link>}
+              {pages.map((i) =>
+                _.isEqual(i.route, Routes.MyNFTs) ? (
+                  publicKey && (
+                    <Link key={i.title} href={i.route} className={linkStyle}>
+                      {i.title}
+                    </Link>
+                  )
+                ) : (
+                  <Link key={i.title} href={i.route} className={linkStyle}>
+                    {i.title}
+                  </Link>
+                )
+              )}
             </Box>
             <CustomSelectWalletButton />
           </Box>
