@@ -50,7 +50,6 @@ function useMetaflex() {
   const getAllNFTs = useCallback(async () => {
     try {
       setIsLoading(true);
-      await new Promise((r) => setTimeout(r, 2000));
       if (!wallet.publicKey) return;
 
       let nftArray: NFT[] = [];
