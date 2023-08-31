@@ -40,7 +40,7 @@ const CustomNftCard: FC<Props> = ({ image, name, description }) => {
             gutterBottom
             variant="h5"
             component="p"
-            className="!text-white"
+            className="!text-white line-clamp-1"
           >
             {`${name}`}
           </Typography>
