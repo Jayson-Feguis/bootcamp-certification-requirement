@@ -90,9 +90,6 @@ function useTileGame() {
     setTiles([]);
   }, []);
 
-  const quit = useCallback(() => {}, []);
-  const save = useCallback(() => {}, []);
-
   const onClickTile = useCallback(
     async (idx: Number) => {
       if (canClick) {
@@ -149,8 +146,6 @@ function useTileGame() {
   return {
     tiles,
     start,
-    quit,
-    save,
     onClickTile,
     clickedTiles,
     clickedCorrectTiles,

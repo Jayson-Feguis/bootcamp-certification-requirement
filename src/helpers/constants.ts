@@ -9,10 +9,6 @@ export const LEADERBOARD_PROGRAM_ID = new PublicKey(
   process.env.NEXT_PUBLIC_LEADERBOARD_PROGRAM_ID as any
 );
 
-// "A7p31uAccXDCFgbb3VA92iS5LNE9vBA29HgjvmhJCxZT"
-// "CKomVJRHhV6PKvkg2KuDsXnwzTJNXPy3KP42nFvvWwsF"
-// "5JjaSMowjsJYbwvboNAde4Zx8eqhMGyKvAzwgRDwGbpp"
-
 export const COLOR = {
   PRIMARY: "#11141E",
   SECONDARY: "#1A1F2E",

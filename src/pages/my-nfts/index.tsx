@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, MouseEvent, useCallback } from "react";
+import { useState, ChangeEvent, MouseEvent } from "react";
 import {
   CustomModal,
   CustomNftCard,
@@ -6,7 +6,6 @@ import {
   PageHeader,
 } from "@/components";
 import { useMetaflex, useOpenElement } from "@/hooks";
-import { IMetadata } from "@/types/global";
 import {
   Button,
   Grid,
