@@ -6,12 +6,21 @@ import {
 } from "@/components";
 import { COLOR, FONT, GAME } from "@/helpers/constants";
 import { useLeaderboard, useOpenElement, useTileGame } from "@/hooks";
-import { Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  IconButton,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import _ from "lodash";
 import { toSentenceCase } from "@/helpers/utils";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { RiSaveLine } from "react-icons/ri";
 import { TbReload } from "react-icons/tb";
+import { AiOutlineReload } from "react-icons/ai";
 
 export default function Home() {
   const {
@@ -53,7 +62,7 @@ export default function Home() {
 
   const renderPlay = () => (
     <Box
-      className="flex justify-center items-center text-white w-[500px] h-[500px] bg-opacity-70 rounded-lg gap-10"
+      className="flex justify-center items-center !text-white w-[500px] h-[500px] bg-opacity-70 rounded-lg gap-10"
       sx={{
         background: `${COLOR.SECONDARY} !important`,
         flexDirection: publicKey ? "column" : "column-reverse",
@@ -93,7 +102,8 @@ export default function Home() {
             >
               {isLeaderboardLoading ? (
                 <>
-                  <CircularProgress size={16} className="mr-3 text-white" /> {i}
+                  <CircularProgress size={16} className="mr-3 !text-white" />{" "}
+                  {i}
                 </>
               ) : (
                 i
@@ -105,7 +115,7 @@ export default function Home() {
     );
 
   const renderPlayAgain = () => (
-    <Box className="flex justify-center items-center flex-col text-white gap-10 w-full">
+    <Box className="flex justify-center items-center flex-col !text-white gap-10 w-full">
       <Box className="flex flex-col text-center">
         <Typography variant="h4" gutterBottom className="font-bold">
           You won!
@@ -160,41 +170,52 @@ export default function Home() {
 
   const renderPoints = () =>
     isStarted && (
-      <Grid
-        container
-        className="flex justify-center"
-        sx={{ width: tileStyle.width }}
-      >
-        {Object.keys(count)?.map(
-          (i) =>
-            !_.isEqual(i, "game") && (
-              <Grid
-                item
-                key={i.toString() as string}
-                className="text-white flex items-end gap-1 justify-center"
-                xs={12 / _.size(Object.keys(count))}
-              >
-                <Typography
-                  className="!text-lg"
-                  sx={{ fontFamily: FONT.PLAYMEGAMES, color: COLOR.WHITE }}
+      <Box className="flex justify-center" sx={{ width: tileStyle.width }}>
+        <Grid
+          container
+          className="flex justify-center"
+          sx={{ width: tileStyle.width }}
+        >
+          {Object.keys(count)?.map(
+            (i) =>
+              !_.isEqual(i, "game") && (
+                <Grid
+                  item
+                  key={i.toString() as string}
+                  className="!text-white flex items-end gap-1 justify-center"
+                  xs={12 / _.size(Object.keys(count))}
                 >
-                  {toSentenceCase(i)}:
-                </Typography>
-                <Typography
-                  className="!text-xl"
-                  sx={{
-                    fontFamily: FONT.BARRIECITO,
-                    color: COLOR.YELLOW,
-                    fontWeight: "bold",
-                  }}
-                >
-                  {count[i.toString()]}
-                  {`${_.isEqual(i, "time") ? "s" : ""}`}
-                </Typography>
-              </Grid>
-            )
-        )}
-      </Grid>
+                  <Typography
+                    className="!text-lg"
+                    sx={{ fontFamily: FONT.PLAYMEGAMES, color: COLOR.WHITE }}
+                  >
+                    {toSentenceCase(i)}:
+                  </Typography>
+                  <Typography
+                    className="!text-xl"
+                    sx={{
+                      fontFamily: FONT.BARRIECITO,
+                      color: COLOR.YELLOW,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {count[i.toString()]}
+                    {`${_.isEqual(i, "time") ? "s" : ""}`}
+                  </Typography>
+                </Grid>
+              )
+          )}
+        </Grid>
+        <Tooltip title="Restart Game">
+          <IconButton
+            onClick={() => start(count.mode)}
+            className="!text-white"
+            size="small"
+          >
+            <AiOutlineReload />
+          </IconButton>
+        </Tooltip>
+      </Box>
     );
 
   const renderTileGrid = () => (
@@ -259,14 +280,14 @@ export default function Home() {
       {/* ---------------------------------- MODAL --------------------------------- */}
       {!isSaved && (
         <CustomModal open={open}>
-          <Box className="flex justify-center items-center flex-col text-white gap-5">
+          <Box className="flex justify-center items-center flex-col !text-white gap-5">
             <Typography variant="h6">Want to save the game?</Typography>
             <Grid container className="w-full">
               {Object.keys(count)?.map((i) => (
                 <Grid
                   item
                   key={i.toString() as string}
-                  className="text-white"
+                  className="!text-white"
                   xs={12}
                 >
                   <Grid container className="w-full">
