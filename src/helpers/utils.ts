@@ -5,7 +5,7 @@ function parseWalletError(error: String) {
 function authorFilter(authorBase58PublicKey: any) {
   return {
     memcmp: {
-      offset: 8, // Discriminator.
+      offset: 8,
       bytes: authorBase58PublicKey,
     },
   };

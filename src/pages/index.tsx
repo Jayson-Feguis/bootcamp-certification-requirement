@@ -139,7 +139,6 @@ export default function Home() {
             Save Game
           </Button>
         )}
-
         <Button
           variant="contained"
           startIcon={<TbReload />}

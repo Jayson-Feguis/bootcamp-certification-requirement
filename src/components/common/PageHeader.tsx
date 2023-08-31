@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, ReactNode, useEffect, useState } from "react";
+import React, { FC, ReactNode } from "react";
 import { Box, Typography } from "@mui/material";
 import { COLOR } from "@/helpers/constants";
 import { AnimatePresence, motion } from "framer-motion";
